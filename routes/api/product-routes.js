@@ -10,16 +10,15 @@ router.get('/', async (req, res) => {
   try {
     const dbProductData =
       await Product.findAll({
-        attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
         include: [
           {
             model: Tag,
-            attributes: ['id', 'tag_name'],
+            attributes: ['tag_name'],
             through: ProductTag,
           },
           {
             model: Category,
-            attributes: ['id', 'category_name'],
+            attributes: ['category_name'],
           },
         ],
       });
@@ -43,12 +42,11 @@ router.get('/:id', async (req, res) => {
         include: [
           {
             model: Tag,
-            attributes: ['id', 'tag_name'],
-            through: ProductTag,
+            attributes: ['tag_name'],
           },
           {
             model: Category,
-            attributes: ['id', 'category_name'],
+            attributes: ['category_name'],
           },
         ],
       });
@@ -89,9 +87,10 @@ router.put('/:id', async (req, res) => {
   try {
     const product = await Product.update(req.body, {
     where: {
-      id: req.params.id,
+      id: req.body.tagIds,
     },
-  }); const productTagIds = productTags.map((tag)=> tag);
+  }); const productTags = await ProductTag.findAll({ where: { product_id: req.params.id } });
+  const productTagIds = productTags.map((tag)=> tag);
   const newProductTags = 
   await req.body.tagIds
     .filter((tag_id) => !productTagIds.includes(tag_id))
