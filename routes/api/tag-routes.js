@@ -34,14 +34,12 @@ router.get('/:id', async (req, res) => {
     include: [{
       model: Product,
       attributes: ['product_name'],
-      through: ProductTag,
     }],
-  })
+  });
     if (!dbTagData) {
       res.status(404).json({ message: 'No tag found with this id' });
       return;
-    }
-    res.json(dbTagData);
+    } res.json({ message: `Tag found with id: ${req.params.id}`, dbTagData });
     } catch(err){
       console.log(err);
       res.status(500).json(err);

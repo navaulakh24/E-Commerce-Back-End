@@ -89,17 +89,21 @@ router.put('/:id', async (req, res) => {
     where: {
       id: req.body.tagIds,
     },
-  }); const productTags = await ProductTag.findAll({ where: { product_id: req.params.id } });
+  }); const productTags = await ProductTag.findAll({ 
+    where: { 
+      product_id: req.params.id 
+    } 
+  });
   const productTagIds = productTags.map((tag)=> tag);
   const newProductTags = 
   await req.body.tagIds
     .filter((tag_id) => !productTagIds.includes(tag_id))
-    .map((tag_id) => {
-      return {
+    .map((tag_id) => (
+      {
         product_id: req.params.id,
-        tag_id,
-      };
-    });
+        tag_id
+      }
+    ));
     // figure out which ones to remove
       const productTagsToRemove = productTags
       .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
