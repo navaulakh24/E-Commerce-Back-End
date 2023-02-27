@@ -49,13 +49,37 @@ await Category.create(req.body)
   });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update a category by its `id` value
-  
+await Category.update(req.body, {
+  where: {
+    id: req.params.id,
+  },
+})
+.then(category=> Category.findByPk(req.params.id))  
+.then((updatedCategory) => {
+    res.json(updatedCategory);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete a category by its `id` value
+await Category.destroy({
+  where: {
+    id: req.params.id,
+  },
+})
+.then((deletedCategory) => {
+    res.json(deletedCategory);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 module.exports = router;
