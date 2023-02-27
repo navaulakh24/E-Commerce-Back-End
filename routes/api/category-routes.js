@@ -73,13 +73,15 @@ await Category.destroy({
     id: req.params.id,
   },
 })
-.then((deletedCategory) => {
-    res.json(deletedCategory);
-  })
+if (!dbCategoryData) {
+  res.status(404).json({ message: 'No category found with this id' });
+  return;
+}
+res.json({ message: `Category deleted with id: ${req.params.id}` });
+})
   .catch((err) => {
     console.log(err);
     res.status(500).json(err);
   });
-});
 
 module.exports = router;
